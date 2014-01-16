@@ -224,10 +224,14 @@ class Board(object):
         Given a Block object, returns a list of neighboring blocks.
         Should not return itself in the list.
         '''
-        #### YOUR CODE HERE #####
-        #### Think about edge conditions!
-        raise Exception("get_block_neighbors not implemented")
-       
+
+        neighbors = []
+        x, y = block.get_coords()
+        for x_offset in [-1, 0, 1]:
+            for y_offset in [-1, 0, 1]:
+                if (x+x_offset, y+y_offset) in self.block_list.keys() and (x_offset != 0 or y_offset != 0):
+                    neighbors.append(self.block_list[x+x_offset, y+y_offset])
+        return neighbors
 
     def simulate(self):
         '''
@@ -276,12 +280,12 @@ if __name__ == '__main__':
 
     ## PART 3: Test that neighbors work by commenting the above and uncommenting
     ## the following two lines:
-    # board.seed(neighbor_test_blocklist)
-    # test_neighbors(board)
+    board.seed(neighbor_test_blocklist)
+    test_neighbors(board)
 
 
     ## PART 4: Test that simulate() works by uncommenting the next two lines:
-    board.seed(toad_blocklist)
+    # board.seed(toad_blocklist)
     # win.after(2000, board.simulate)
 
     ## PART 5: Try animating! Comment out win.after(2000, board.simulate) above, and
