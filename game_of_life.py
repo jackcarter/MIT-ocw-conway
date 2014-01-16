@@ -233,6 +233,13 @@ class Board(object):
                     neighbors.append(self.block_list[x+x_offset, y+y_offset])
         return neighbors
 
+    def get_live_neighbor_count(self, neighbors):
+        live_count = 0
+        for block in neighbors:
+           if block.status == 'live':
+                live_count += 1
+        return live_count
+
     def simulate(self):
         '''
         Executes one turn of Conways Game of Life using the rules
@@ -247,10 +254,19 @@ class Board(object):
            to call reset_status(self.canvas) on each block.
         '''
 
-        #### YOUR CODE HERE #####
-        raise Exception("simulate not implemented")
-
-        
+        for block in self.block_list.values():
+            neighbors = self.get_block_neighbors(block)
+            live_count = self.get_live_neighbor_count(neighbors)
+            if block.status == 'live':
+                if 2 <= live_count <= 3:
+                    block.new_status = 'live'
+                else: block.new_status = 'dead'
+            else:
+                if live_count == 3:
+                    block.new_status = 'live'
+                else: block.new_status = 'dead'
+        for block in self.block_list.values():
+            block.reset_status(self.canvas)
 
     def animate(self):
         '''
@@ -272,7 +288,7 @@ if __name__ == '__main__':
     board = Board(win, BOARD_WIDTH, BOARD_HEIGHT)
 
     ## PART 1: Make sure that the board __init__ method works    
-    #board.random_seed(.15)
+    # board.random_seed(.15)
 
     ## PART 2: Make sure board.seed works. Comment random_seed above and uncomment
     ##  one of the seed methods below
@@ -280,13 +296,13 @@ if __name__ == '__main__':
 
     ## PART 3: Test that neighbors work by commenting the above and uncommenting
     ## the following two lines:
-    board.seed(neighbor_test_blocklist)
-    test_neighbors(board)
+    # board.seed(neighbor_test_blocklist)
+    # test_neighbors(board)
 
 
     ## PART 4: Test that simulate() works by uncommenting the next two lines:
-    # board.seed(toad_blocklist)
-    # win.after(2000, board.simulate)
+    board.seed(toad_blocklist)
+    win.after(2000, board.simulate)
 
     ## PART 5: Try animating! Comment out win.after(2000, board.simulate) above, and
     ## uncomment win.after below.
