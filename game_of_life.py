@@ -174,14 +174,14 @@ class Board(object):
         for y in range(1,self.height):
             self.draw_gridline(Point(0, y), Point(self.width, y))
 
-        # For each square on the board, we need to initialize
-        # a block and store that block in a data structure. A
-        # dictionary (self.block_list) that has key:value pairs of
-        # (x,y):Block will be useful here.
         self.block_list = {}
 
+        for x in range(self.width):
+            for y in range(self.height):
+                self.block_list[(x, y)] = Block(Point(x, y), 'blue')
+
         ####### YOUR CODE HERE ######
-        raise Exception("__init__ not implemented")
+#        raise Exception("__init__ not implemented")
 
 
     def draw_gridline(self, startp, endp):
