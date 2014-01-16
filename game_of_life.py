@@ -8,10 +8,10 @@ import random
 # GLOBAL VARIABLES
 ############################################################
     
-BLOCK_SIZE = 40
+BLOCK_SIZE = 10
 BLOCK_OUTLINE_WIDTH = 2
-BOARD_WIDTH = 12
-BOARD_HEIGHT = 12
+BOARD_WIDTH = 25
+BOARD_HEIGHT = 25
 
 neighbor_test_blocklist = [(0,0), (1,1)]
 toad_blocklist = [(4,4), (3,5), (3,6), (5,7), (6,5), (6,6)]
@@ -160,7 +160,7 @@ class Board(object):
         self.win = win
         # self.delay is the number of ms between each simulation. Change to be
         # shorter or longer if you wish!
-        self.delay = 1000
+        self.delay = 300
 
         # create a canvas to draw the blocks on
         self.canvas = CanvasFrame(win, self.width * BLOCK_SIZE,
@@ -288,7 +288,7 @@ if __name__ == '__main__':
     board = Board(win, BOARD_WIDTH, BOARD_HEIGHT)
 
     ## PART 1: Make sure that the board __init__ method works    
-    # board.random_seed(.15)
+    #board.random_seed(.15)
 
     ## PART 2: Make sure board.seed works. Comment random_seed above and uncomment
     ##  one of the seed methods below
@@ -301,12 +301,12 @@ if __name__ == '__main__':
 
 
     ## PART 4: Test that simulate() works by uncommenting the next two lines:
-    board.seed(toad_blocklist)
-    win.after(2000, board.simulate)
+    board.seed(diehard_blocklist)
+    # win.after(2000, board.simulate)
 
     ## PART 5: Try animating! Comment out win.after(2000, board.simulate) above, and
     ## uncomment win.after below.
-    # win.after(2000, board.animate)
+    win.after(800, board.animate)
 
     ## Yay, you're done! Try seeding with different blocklists (a few are provided at the top of this file!)
     
