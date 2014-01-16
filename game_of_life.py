@@ -216,10 +216,8 @@ class Board(object):
         and activates the blocks corresponding to those coordinates.
         '''
 
-        #### YOUR CODE HERE #####
-        raise Exception("seed not implemented")
-    
-
+        for block in block_coords:
+            self.block_list[block].set_live(self.canvas)
 
     def get_block_neighbors(self, block):
         '''
@@ -270,7 +268,7 @@ if __name__ == '__main__':
     board = Board(win, BOARD_WIDTH, BOARD_HEIGHT)
 
     ## PART 1: Make sure that the board __init__ method works    
-    board.random_seed(.15)
+    #board.random_seed(.15)
 
     ## PART 2: Make sure board.seed works. Comment random_seed above and uncomment
     ##  one of the seed methods below
@@ -283,7 +281,7 @@ if __name__ == '__main__':
 
 
     ## PART 4: Test that simulate() works by uncommenting the next two lines:
-    # board.seed(toad_blocklist)
+    board.seed(toad_blocklist)
     # win.after(2000, board.simulate)
 
     ## PART 5: Try animating! Comment out win.after(2000, board.simulate) above, and
