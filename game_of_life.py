@@ -242,6 +242,16 @@ class Board(object):
                 live_count += 1
         return live_count
 
+    def get_live_neighbor_count(self, block):
+        live_count = 0
+        x, y = block.get_coords()
+        for x_offset in [-1, 0, 1]:
+            for y_offset in [-1, 0, 1]:
+                if (x+x_offset, y+y_offset) in self.block_list.keys() and (x_offset != 0 or y_offset != 0):
+                    if self.block_list[x+x_offset, y+y_offset].status == 'live':
+                        live_count += 1
+        return live_count
+
     def simulate(self):
         '''
         Executes one turn of Conways Game of Life using the rules
@@ -257,8 +267,9 @@ class Board(object):
         '''
 
         for block in self.block_list.values():
-            neighbors = self.get_block_neighbors(block)
-            live_count = self.get_live_neighbor_count(neighbors)
+            #neighbors = self.get_block_neighbors(block)
+            #live_count = self.get_live_neighbor_count(neighbors)
+            live_count = self.get_live_neighbor_count(block)
             if block.status == 'live':
                 if 2 <= live_count <= 3:
                     block.new_status = 'live'
