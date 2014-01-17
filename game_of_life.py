@@ -197,23 +197,6 @@ class Board(object):
                 if (x+x_offset, y+y_offset) in self.block_list.keys() and (x_offset != 0 or y_offset != 0):
                     yield self.block_list[x+x_offset, y+y_offset]
         
-    def get_live_neighbor_count(self, neighbors):
-        live_count = 0
-        for block in neighbors:
-           if block.status == 'live':
-                live_count += 1
-        return live_count
-
-    def get_live_neighbor_count(self, block):
-        live_count = 0
-        x, y = block.get_coords()
-        for x_offset in [-1, 0, 1]:
-            for y_offset in [-1, 0, 1]:
-                if (x+x_offset, y+y_offset) in self.block_list.keys() and (x_offset != 0 or y_offset != 0):
-                    if self.block_list[x+x_offset, y+y_offset].status == 'live':
-                        live_count += 1
-        return live_count
-
     def update_live_block_neighbors(self):
         blocks = self.block_list.values()
         for block in blocks:
