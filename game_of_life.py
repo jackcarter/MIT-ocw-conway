@@ -9,13 +9,12 @@ import cProfile, pstats, StringIO
 # GLOBAL VARIABLES
 ############################################################
     
-BLOCK_SIZE = 6
+BLOCK_SIZE = 10
 BLOCK_OUTLINE_WIDTH = 2
-BOARD_WIDTH = 100
-BOARD_HEIGHT = 100
+BOARD_WIDTH = 50
+BOARD_HEIGHT = 50
 count = 0
 
-neighbor_test_blocklist = [(0,0), (1,1)]
 toad_blocklist = [(4,4), (3,5), (3,6), (5,7), (6,5), (6,6)]
 beacon_blocklist = [(2,3), (2,4), (3,3), (3,4), (4,5), (4,6), (5,5), (5,6)]
 glider_blocklist = [(1,2), (2,3), (3,1), (3,2), (3,3)]
@@ -23,53 +22,6 @@ pulsar_blocklist = [(2,4), (2,5), (2,6), (4,2), (4,7), (5,2), (5,7),
                     (6,2), (6,7), (7,4), (7,5), (7,6), ]
 # for diehard, make board at least 25x25, might need to change block size
 diehard_blocklist = [(5,7), (6,7), (6,8), (10,8), (11,8), (12,8), (11,6)]
-
-############################################################
-# TEST CODE (don't worry about understanding this section)
-############################################################
-
-def test_neighbors(board):
-    '''
-    Code to test the board.get_block_neighbor function
-    '''
-    for block in board.block_list.values():
-        neighbors = board.get_block_neighbors(block)
-        ncoords = [neighbor.get_coords() for neighbor in neighbors]
-        if block.get_coords() == (0,0):
-            zeroneighs = [(0,1), (1,1), (1,0)]
-            for n in ncoords:
-                if n not in zeroneighs:
-                    print "Testing block at (0,0)"
-                    print "Got", ncoords
-                    print "Expected", zeroneighs
-                    return False
-
-            for neighbor in neighbors:
-                if neighbor.get_coords() == (1, 1):
-                    if neighbor.is_live() == False:
-                        print "Testing block at (0, 0)..."
-                        print "My neighbor at (1, 1) should be live; it is not."
-                        print "Did you return my actual neighbors, or create new copies of them?"
-                        print "FAIL: get_block_neighbors() should NOT return new Blocks!"
-                        return False
-
-        elif block.get_coords() == (1,1):
-            oneneighs = [(0,0), (0,1), (0,2), (1,0), (1,2), (2,0), (2,1),(2,2)]
-            for n in ncoords:
-                if n not in oneneighs:
-                    print "Testing block at (1,1)"
-                    print "Got", ncoords
-                    print "Expected", oneneighs
-                    return False
-            for n in oneneighs:
-                if n not in ncoords:
-                    print "Testing block at (1,1)"
-                    print "Got", ncoords
-                    print "Expected", oneneighs
-                    return False
-    print "Passed neighbor test"
-    return True
-
 
 ############################################################
 # BLOCK CLASS (Read through and understand this part!)
@@ -301,7 +253,7 @@ class Board(object):
         self.simulate()
         global count
         count += 1
-        if count < 10:
+        if count < 100:
             self.win.after(self.delay, self.animate)
         else:
             self.canvas.close()
@@ -316,29 +268,11 @@ if __name__ == '__main__':
     # Initalize board
     win = Window("Conway's Game of Life")
     board = Board(win, BOARD_WIDTH, BOARD_HEIGHT)
-
-    ## PART 1: Make sure that the board __init__ method works    
-    board.random_seed(.15)
-
-    ## PART 2: Make sure board.seed works. Comment random_seed above and uncomment
-    ##  one of the seed methods below
-    # board.seed(toad_blocklist)
-
-    ## PART 3: Test that neighbors work by commenting the above and uncommenting
-    ## the following two lines:
-    # board.seed(neighbor_test_blocklist)
-    # test_neighbors(board)
-
-
-    ## PART 4: Test that simulate() works by uncommenting the next two lines:
-    #board.seed(diehard_blocklist)
-    # win.after(2000, board.simulate)
-
-    ## PART 5: Try animating! Comment out win.after(2000, board.simulate) above, and
-    ## uncomment win.after below.
+   
     pr = cProfile.Profile()
     pr.enable()
 
+    board.random_seed(.15)
     board.animate()    
     win.mainloop()
 
