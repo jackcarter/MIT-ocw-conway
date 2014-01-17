@@ -9,10 +9,10 @@ import cProfile, pstats, StringIO
 # GLOBAL VARIABLES
 ############################################################
     
-BLOCK_SIZE = 10
+BLOCK_SIZE = 6
 BLOCK_OUTLINE_WIDTH = 2
-BOARD_WIDTH = 50
-BOARD_HEIGHT = 50
+BOARD_WIDTH = 100
+BOARD_HEIGHT = 100
 count = 0
 
 neighbor_test_blocklist = [(0,0), (1,1)]
@@ -101,6 +101,7 @@ class Block(Rectangle):
         self.setFill(color)
         self.status = 'dead'
         self.new_status = 'None'
+        self.live_neighbor_count = 0
         
     def get_coords(self):
         return (self.x, self.y)
@@ -138,6 +139,17 @@ class Block(Rectangle):
             self.set_dead()
         elif self.new_status=='live':
             self.set_live(canvas)
+        self.live_neighbor_count = 0
+
+    def set_new_status(self):
+        if self.status == 'live':
+            if 2 <= self.live_neighbor_count <= 3:
+                self.new_status = 'live'
+            else: self.new_status = 'dead'
+        else:
+            if self.live_neighbor_count == 3:
+                self.new_status = 'live'
+            else: self.new_status = 'dead'
         
 
 ###########################################################
@@ -162,7 +174,7 @@ class Board(object):
         self.win = win
         # self.delay is the number of ms between each simulation. Change to be
         # shorter or longer if you wish!
-        self.delay = 50
+        self.delay = 5
 
         # create a canvas to draw the blocks on
         self.canvas = CanvasFrame(win, self.width * BLOCK_SIZE,
@@ -252,6 +264,17 @@ class Board(object):
                         live_count += 1
         return live_count
 
+    def update_live_block_neighbors(self):
+        blocks = self.block_list.values()
+        for block in blocks:
+            if block.status == 'live':
+                for neighbor in self.get_block_neighbors(block):
+                    neighbor.live_neighbor_count += 1
+        for block in blocks:
+            block.set_new_status()
+        for block in blocks:
+            block.reset_status(self.canvas)
+
     def simulate(self):
         '''
         Executes one turn of Conways Game of Life using the rules
@@ -266,20 +289,7 @@ class Board(object):
            to call reset_status(self.canvas) on each block.
         '''
 
-        for block in self.block_list.values():
-            #neighbors = self.get_block_neighbors(block)
-            #live_count = self.get_live_neighbor_count(neighbors)
-            live_count = self.get_live_neighbor_count(block)
-            if block.status == 'live':
-                if 2 <= live_count <= 3:
-                    block.new_status = 'live'
-                else: block.new_status = 'dead'
-            else:
-                if live_count == 3:
-                    block.new_status = 'live'
-                else: block.new_status = 'dead'
-        for block in self.block_list.values():
-            block.reset_status(self.canvas)
+        self.update_live_block_neighbors()
 
 
 
@@ -329,7 +339,7 @@ if __name__ == '__main__':
     pr = cProfile.Profile()
     pr.enable()
 
-    win.after(800, board.animate)    
+    board.animate()    
     win.mainloop()
 
     pr.disable()
