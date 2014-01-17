@@ -191,14 +191,12 @@ class Board(object):
         Should not return itself in the list.
         '''
 
-        neighbors = []
         x, y = block.get_coords()
         for x_offset in [-1, 0, 1]:
             for y_offset in [-1, 0, 1]:
                 if (x+x_offset, y+y_offset) in self.block_list.keys() and (x_offset != 0 or y_offset != 0):
-                    neighbors.append(self.block_list[x+x_offset, y+y_offset])
-        return neighbors
-
+                    yield self.block_list[x+x_offset, y+y_offset]
+        
     def get_live_neighbor_count(self, neighbors):
         live_count = 0
         for block in neighbors:
